@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task Manager</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f3f5f9; color: #20283a; }
+    main { max-width: 720px; margin: 56px auto; padding: 28px; background: white; border-radius: 18px; box-shadow: 0 12px 40px #1b2b4a12; }
+    h1 { margin: 0 0 8px; } .muted { color: #697386; margin-top: 0; }
+    form.add { display: flex; gap: 10px; margin: 24px 0; }
+    input { flex: 1; min-width: 0; padding: 12px; border: 1px solid #ccd3df; border-radius: 9px; font-size: 15px; }
+    button { border: 0; border-radius: 9px; padding: 10px 14px; cursor: pointer; background: #2457d6; color: white; font-weight: 600; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { display: flex; align-items: center; gap: 10px; padding: 13px 0; border-top: 1px solid #edf0f5; }
+    li span { flex: 1; } .done { text-decoration: line-through; color: #8992a3; }
+    .small { padding: 8px 10px; font-size: 13px; } .delete { background: #d94343; }
+    .empty { color: #8992a3; padding: 18px 0; }
+    footer { margin-top: 24px; color: #8992a3; font-size: 13px; }
+    @media (max-width: 520px) { main { margin: 16px; padding: 20px; } li { flex-wrap: wrap; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>My Task Manager</h1>
+  <p class="muted">A small Python Flask app deployed with Jenkins CI/CD.</p>
+  <form class="add" action="/add" method="post">
+    <input name="title" placeholder="What do you need to do?" required maxlength="100">
+    <button type="submit">Add task</button>
+  </form>
+  <ul>
+    {% for task in tasks %}
+    <li>
+      <span class="{{ 'done' if task.done else '' }}">{{ task.title }}</span>
+      <form action="/toggle/{{ task.id }}" method="post">
+        <button class="small" type="submit">{{ 'Undo' if task.done else 'Done' }}</button>
+      </form>
+      <form action="/delete/{{ task.id }}" method="post">
+        <button class="small delete" type="submit">Delete</button>
+      </form>
+    </li>
+    {% else %}
+    <li class="empty">No tasks yet. Add your first task above.</li>
+    {% endfor %}
+  </ul>
+  <footer>Health check: <a href="/health">/health</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[Unit]
+Description=Python Task Manager Flask application
+After=network.target
+
+[Service]
+User=jenkins
+Group=jenkins
+WorkingDirectory=/opt/python-task-manager
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/opt/python-task-manager/venv/bin/python /opt/python-task-manager/app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
